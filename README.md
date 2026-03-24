@@ -1,66 +1,183 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistema de Requerimento Acadêmico com Integração via API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Visão Geral
 
-## About Laravel
+Este projeto consiste em um sistema de requerimento acadêmico desenvolvido para ambiente universitário, com integração via API ao Ambiente Virtual de Aprendizagem (AVA).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O sistema tem como objetivo automatizar a validação de alunos e o carregamento de seus dados acadêmicos, garantindo consistência e evitando redundância de informações.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Objetivo
 
-## Learning Laravel
+Permitir que alunos realizem requisições acadêmicas em um sistema próprio, validando automaticamente suas informações através de integração com o AVA (Moodle).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Arquitetura e Funcionamento
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+O sistema segue uma lógica de consulta inteligente para otimizar performance e reduzir chamadas desnecessárias à API externa.
 
-## Laravel Sponsors
+### Fluxo principal:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. O usuário tenta realizar login no sistema
+2. O sistema verifica se o aluno existe no banco de dados local
+3. Caso não exista:
 
-### Premium Partners
+   * Realiza uma requisição via API ao AVA (Moodle)
+   * Verifica se o aluno está devidamente matriculado
+4. Se o aluno estiver válido:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+   * Os dados são clonados do AVA
+   * Persistidos no banco de dados local
+5. A partir disso:
 
-## Contributing
+   * O login é realizado normalmente
+   * O sistema passa a utilizar apenas os dados locais
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Importante:
 
-## Code of Conduct
+* A consulta à API externa ocorre apenas uma vez por usuário
+* Evita chamadas repetitivas e melhora a performance
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## Integração com AVA (Moodle)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+A integração com o AVA permite:
 
-## License
+* Validação de matrícula do aluno
+* Importação de dados acadêmicos
+* Sincronização inicial de informações
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Dados obtidos via API:
+
+* Dados do aluno
+* Curso
+* Disciplinas
+* Informações acadêmicas relevantes
+
+---
+
+## Funcionalidades
+
+* Autenticação de usuários
+* Validação de matrícula via API
+* Sincronização de dados com AVA
+* Persistência local de dados
+* Sistema de requerimentos acadêmicos
+* Controle de usuários, cursos e disciplinas
+
+---
+
+## Tecnologias Utilizadas
+
+* PHP (Laravel)
+* API REST
+* Banco de dados relacional
+* Integração com Moodle (AVA)
+
+
+---
+
+## Estrutura do Projeto
+
+* Controllers:
+
+  * AuthController: autenticação e login
+  * UserController: gerenciamento de usuários
+  * CourseController: gestão de cursos
+  * DisciplineController: gestão de disciplinas
+  * MoodleController: integração com API do AVA
+  * RequerimentoController: controle de requerimentos
+  * PermissionController: controle de permissões
+
+* Diretórios principais:
+
+  * routes/: definição de rotas
+  * database/: estrutura e migrations
+  * tests/: testes automatizados
+
+---
+
+## Estratégia de Testes
+
+Foram implementados testes de API para validar:
+
+* Autenticação de usuários
+* Integração com o AVA
+* Consistência dos dados retornados
+* Regras de negócio (validação de matrícula)
+
+### Tipos de testes:
+
+* Testes funcionais de API
+* Testes de integração
+* Testes positivos e negativos
+
+---
+
+## Cenários de Teste
+
+### Validação de aluno
+
+* Deve validar aluno existente no AVA
+* Não deve autenticar aluno não matriculado
+* Deve buscar dados apenas uma vez
+* Deve persistir dados corretamente no banco local
+
+### Login
+
+* Deve permitir login com usuário válido
+* Não deve permitir login sem validação prévia
+* Deve utilizar dados locais após sincronização
+
+### Integração com API
+
+* Deve consumir API do Moodle com sucesso
+* Deve tratar falhas de comunicação
+* Deve validar estrutura dos dados retornados
+
+---
+
+## Diferenciais do Projeto
+
+* Estratégia de cache de dados (evita chamadas repetidas à API)
+* Integração eficiente com sistema externo (AVA)
+* Separação clara de responsabilidades
+* Aplicação de testes em nível de API
+* Foco em performance e consistência de dados
+
+---
+
+## Possíveis Melhorias
+
+* Implementação de fila para sincronização assíncrona
+* Cache com Redis
+* Monitoramento de chamadas à API
+* CI/CD com pipeline de testes
+* Testes de carga
+
+---
+
+## Como Executar o Projeto
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
+```
+
+---
+
+## Como Executar os Testes
+
+```bash
+php artisan test
+```
+
+---
+
+
